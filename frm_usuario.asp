@@ -9,11 +9,11 @@ id   = Request.QueryString("id")
 
 if (trim(id) = "") or (isnull(id)) then id = 0 end if
 
-' Consiste o Evento
+' Consiste o ID
 if (cint(id) <> 0) then
 			
-	' Seleciona os dados do evento
-	strSQL = "select * from users where id = " & id
+	' Seleciona os dados do usuario
+	strSQL = "SELECT * FROM users WHERE id = " & id
 	
 	' Executa a string sql.
 	Set ObjRst = conDB.execute(strSQL)
@@ -21,7 +21,7 @@ if (cint(id) <> 0) then
 	' Verifica se não é final de arquivo.	
 	if not ObjRst.EOF then
 				
-		' Carrega as informações do Evento
+		' Carrega as informações do usuario
 		name = ObjRst("name")
 		email     = ObjRst("email")
 

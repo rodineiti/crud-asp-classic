@@ -9,7 +9,7 @@ if trim(id) = "" or isnull(id) or trim(id) = "0" then
 	Response.End
 end If
 
-strSQL = "delete from users where id = " & id
+strSQL = "DELETE FROM users WHERE id = " & id
 
 conDB.execute(strSQL)
 

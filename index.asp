@@ -6,9 +6,44 @@ Session.lcId     = 1033
 <!-- #include file="includes/conexao.asp" -->
 <%
 
-strStatus = Request.Item("strStatus")
-strMsg = ""
+function Ceil(Number)
+    Ceil = Int(Number)
+    if Ceil <> Number then
+        Ceil = Ceil + 1
+    end if
+end function
 
+function ternario(cond, ret)
+  if cond = True then
+    Response.Write ret
+  else
+    Response.Write ""
+  end if
+end function
+
+strStatus = Request.Item("strStatus")
+
+' Paginacao
+page = Request.Item("page")
+limit = 10
+
+if (trim(page) = "") or (isnull(page)) then
+  page = 1
+end if
+
+offset = ((Clng(page) * Clng(limit)) - Clng(limit))
+
+strSQL = "SELECT COUNT(ID) AS count FROM users"
+
+Set ObjRstCount = conDB.execute(strSQL)
+
+totalRows = CLng(ObjRstCount("count"))
+
+set ObjRstCount = Nothing
+
+pages = Ceil((totalRows / limit))
+
+strMsg = ""
 select case trim(ucase(strStatus))
   case "INC"
     strMsg = "Cadastro realizado com Sucesso"
@@ -66,9 +101,14 @@ end select
 
     <div class="starter-template">
       <h1>Lista de Usuários</h1>
-      <p align="left">
-        <a href="frm_usuario.asp?id=0" class="btn btn-primary btn-cons" alt="Incluir Cadastro" title="Incluir Cadastro"><i class="glyphicon glyphicon-plus"></i> Adicionar</a>
-      </p>
+      <div class="row">
+        <div class="col-md-8">
+          <p align="left">
+             <a href="frm_usuario.asp?id=0" class="btn btn-primary btn-cons" alt="Incluir Cadastro" title="Incluir Cadastro"><i class="glyphicon glyphicon-plus"></i> Adicionar</a>
+          </p>      
+        </div>
+        <div class="col-md-4"></div>
+      </div>
 
       <table class="table table-bordered"> 
         <thead>
@@ -80,10 +120,10 @@ end select
           </tr>
         </thead>
         <tbody>
-
           <%
 
-          strSQL = "select * from users order by name asc;"
+          strSQL = "SELECT * FROM users ORDER BY name ASC "
+          strSQL = strSQL & "LIMIT " & limit & " OFFSET " & offset & ";"
 
           set ObjRst = conDB.execute(strSQL)
 
@@ -112,6 +152,16 @@ end select
 
         </tbody>
       </table>
+
+      <nav aria-label="...">
+        <ul class="pagination">
+          <% if (pages > 1) then %>
+            <% For i = 1 To pages %>
+              <li class="<%=ternario(Clng(i)=Clng(page), "active")%>"><a href="index.asp?page=<%=i%>"><%=i%></a></li>
+            <% Next %>
+          <% end if %>
+        </ul>
+      </nav>
     </div>
 
     <!-- MODAL Exclusão-->

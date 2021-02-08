@@ -14,7 +14,7 @@ if (trim(id) = "") or (isnull(id)) then id = 0 end if
 	
 if cint(id) = 0 then
 	
-	strSQL = "insert into users (name, email) values ('"&name&"','"&email&"');"
+	strSQL = "INSERT INTO users (name, email) VALUES ('"&name&"','"&email&"');"
 	conDB.execute(strSQL)
 
 	response.redirect("index.asp?strStatus=INC")
@@ -22,7 +22,7 @@ if cint(id) = 0 then
 	
 else
 
-	strSQL = "update users set name = '"&name&"', email = '"&email&"' where id = " & id
+	strSQL = "UPDATE users SET name = '"&name&"', email = '"&email&"' WHERE id = " & id
 	conDB.execute(strSQL)
 
 	response.redirect("index.asp?strStatus=ALT")
